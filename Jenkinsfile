@@ -15,7 +15,7 @@ node{
         sh 'docker push rathorekeshav14/insure-me:1.0'
         }
     }
-    stage('stage to deploy'){
+    stage('stage to test'){
         ansiblePlaybook become: true, credentialsId: 'ansible-key', disableHostKeyChecking: true, installation: 'ansible', inventory: '/etc/ansible/hosts', playbook: 'configure-test-server.yml', vaultTmpPath: ''
     }
     stage('checkout regression test source code'){
