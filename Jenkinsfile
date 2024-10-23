@@ -3,7 +3,7 @@ node{
     stage('checkout'){
         git 'https://www.github.com/keshav1412/insurance-project-demo.git'
     }
-    stage('maven build '){
+    stage('maven build now'){
         sh 'mvn clean package'
     }
     stage('containerize'){
