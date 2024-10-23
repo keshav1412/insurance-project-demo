@@ -3,7 +3,7 @@ node{
     stage('checkout'){
         git 'https://www.github.com/keshav1412/insurance-project-demo.git'
     }
-    stage('maven build now'){
+    stage('maven build'){
         sh 'mvn clean package'
     }
     stage('containerize'){
@@ -17,5 +17,24 @@ node{
     }
     stage('stage to deploy'){
         ansiblePlaybook become: true, credentialsId: 'ansible-key', disableHostKeyChecking: true, installation: 'ansible', inventory: '/etc/ansible/hosts', playbook: 'configure-test-server.yml', vaultTmpPath: ''
-    }    
+    }
+    stage('checkout regression test source code'){
+        git 'https://github.com/keshav1412/my-selenium-test-app.git'
+    }
+    
+    stage('build test scripts'){
+        sh 'mvn clean package assembly:single'
+    }
+    
+    stage('execute selenium test script'){
+        sh 'java -jar target/my-app-test-0.0.1-SNAPSHOT-jar-with-dependencies.jar'
+    }
+
+    stage('checkout'){
+        git 'https://github.com/keshav1412/insurance-project-demo.git'
+    }
+    
+     stage('Deploy to Prod'){
+     ansiblePlaybook become: true, credentialsId: 'ansible-key', disableHostKeyChecking: true, installation: 'ansible', inventory: '/etc/ansible/hosts', playbook: 'configure-prod-server.yml', vaultTmpPath: ''
+    }  
 }
